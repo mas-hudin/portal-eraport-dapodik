@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Aplikasi Sekolah - E-Rapor & Dapodik</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+    <!-- Background Hiasan -->
+    <div class="absolute inset-0 overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-900/20 blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-900/10 blur-[120px]"></div>
+    </div>
+
+    <!-- Header / Navigasi -->
+    <header class="border-b border-slate-800/80 bg-slate-900/50 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-indigo-600/10 rounded-lg border border-indigo-500/20 text-indigo-400">
+                    <i data-lucide="school" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight tracking-tight">Portal Link Sekolah</h1>
+                    <p class="text-xs text-slate-400">Akses Cepat Layanan Cloudflare</p>
+                </div>
+            </div>
+            
+            <button id="btnConfig" class="p-2 hover:bg-slate-800 rounded-lg transition duration-200 text-slate-400 hover:text-white flex items-center gap-2 text-sm border border-slate-800">
+                <i data-lucide="settings" class="w-4 h-4"></i>
+                <span>Konfigurasi Link</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Konten Utama -->
+    <main class="max-w-4xl mx-auto px-4 py-12 flex-grow flex flex-col justify-center w-full">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-3 bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+                Pilih Layanan Aplikasi
+            </h2>
+            <p class="text-slate-400 max-w-lg mx-auto text-sm md:text-base">
+                Silakan pilih aplikasi yang ingin Anda buka. Link ini terhubung langsung dengan server lokal sekolah melalui jalur aman Cloudflare.
+            </p>
+        </div>
+
+        <!-- Info Auto Redirect (Tersembunyi jika tidak diaktifkan) -->
+        <div id="redirectBanner" class="hidden max-w-md mx-auto mb-8 bg-indigo-950/40 border border-indigo-500/30 rounded-xl p-4 flex items-center justify-between animate-pulse">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-indigo-500/20 rounded-lg text-indigo-400">
+                    <i data-lucide="forward" class="w-5 h-5"></i>
+                </div>
+                <div class="text-left">
+                    <p class="text-xs text-indigo-300 font-medium">Auto-Forward Aktif</p>
+                    <p id="redirectMsg" class="text-sm font-semibold text-white">Membuka E-Rapor dalam <span id="countdown" class="text-yellow-400 font-bold">5</span> detik...</p>
+                </div>
+            </div>
+            <button id="btnCancelRedirect" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs rounded-md font-semibold transition">
+                Batalkan
+            </button>
+        </div>
+
+        <!-- Grid Tombol Aplikasi -->
+        <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto w-full">
+            
+            <!-- Card E-Rapor -->
+            <div class="group relative bg-slate-900 border border-slate-800 hover:border-indigo-500/50 rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/5 flex flex-col justify-between overflow-hidden">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 rounded-full blur-xl group-hover:bg-indigo-500/10 transition-all duration-300"></div>
+                <div>
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="p-3.5 bg-indigo-500/10 rounded-xl text-indigo-400 border border-indigo-500/20">
+                            <i data-lucide="book-open" class="w-8 h-8"></i>
+                        </div>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                            Online (Cloudflare)
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-indigo-400 transition-colors">E-RAPOR</h3>
+                    <p class="text-sm text-slate-400 mb-6">
+                        Aplikasi penilaian hasil belajar peserta didik oleh pendidik secara digital dan terintegrasi Dapodik.
+                    </p>
+                </div>
+                <a id="linkErapor" href="#" target="_blank" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition duration-200 flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20">
+                    <span>Buka E-Rapor</span>
+                    <i data-lucide="external-link" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+            <!-- Card Dapodik -->
+            <div class="group relative bg-slate-900 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/5 flex flex-col justify-between overflow-hidden">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-all duration-300"></div>
+                <div>
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="p-3.5 bg-emerald-500/10 rounded-xl text-emerald-400 border border-emerald-500/20">
+                            <i data-lucide="database" class="w-8 h-8"></i>
+                        </div>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                            Online (Cloudflare)
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-emerald-400 transition-colors">DAPODIK</h3>
+                    <p class="text-sm text-slate-400 mb-6">
+                        Sistem pendataan skala nasional yang terpadu, dan merupakan sumber data utama pendidikan nasional.
+                    </p>
+                </div>
+                <a id="linkDapodik" href="#" target="_blank" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition duration-200 flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20">
+                    <span>Buka Dapodik</span>
+                    <i data-lucide="external-link" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 bg-slate-950/30 py-6">
+        <div class="max-w-5xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500 text-center md:text-left">
+            <div>
+                <p>&copy; 2026 Mashudin. Hosting di server pribadi.</p>
+                <p class="mt-1">Dihubungkan menggunakan <span class="text-amber-500 font-semibold">Cloudflare Tunnel</span></p>
+            </div>
+            <div class="flex gap-4">
+                <a href="https://github.com" target="_blank" class="hover:text-slate-300 flex items-center gap-1">
+                    <i data-lucide="github" class="w-3.5 h-3.5"></i> GitHub
+                </a>
+                <a href="https://cloudflare.com" target="_blank" class="hover:text-slate-300 flex items-center gap-1">
+                    <i data-lucide="shield" class="w-3.5 h-3.5"></i> Cloudflare
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL KONFIGURASI (Untuk Menyimpan URL Cloudflare ke Local Storage) -->
+    <div id="modalConfig" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="sliders" class="text-indigo-400 w-5 h-5"></i>
+                    <h3 class="font-bold text-lg">Konfigurasi Link Aplikasi</h3>
+                </div>
+                <button id="btnCloseModal" class="p-1 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <form id="configForm" class="p-6 space-y-4">
+                <p class="text-xs text-slate-400 leading-relaxed mb-2">
+                    Atur URL Cloudflare Anda di bawah ini. Data disimpan aman di memori browser Anda (Local Storage), sehingga Anda tidak perlu menyunting source code HTML saat ganti link.
+                </p>
+                
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">URL E-Rapor Cloudflare</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 text-sm">https://</span>
+                        <input type="text" id="inputErapor" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 pl-16 pr-4 text-sm text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 placeholder-slate-600" placeholder="erapor-sekolah.trycloudflare.com">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">URL Dapodik Cloudflare</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 text-sm">https://</span>
+                        <input type="text" id="inputDapodik" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 pl-16 pr-4 text-sm text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 placeholder-slate-600" placeholder="dapodik-sekolah.trycloudflare.com">
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-800 pt-4">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Opsi Auto-Redirect (Forward Otomatis)</label>
+                    <select id="selectAutoRedirect" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 px-3 text-sm text-slate-300 focus:outline-none focus:border-indigo-500">
+                        <option value="none">Jangan Redirect Otomatis (Tampilkan Pilihan Saja)</option>
+                        <option value="erapor">Otomatis Buka E-Rapor (Dalam 5 Detik)</option>
+                        <option value="dapodik">Otomatis Buka Dapodik (Dalam 5 Detik)</option>
+                    </select>
+                </div>
+
+                <!-- Notifikasi Berhasil Simpan (Custom Message Box pengganti alert) -->
+                <div id="saveSuccessMsg" class="hidden p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-lg flex items-center gap-2">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                    <span>Konfigurasi berhasil disimpan dan diperbarui!</span>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4 border-t border-slate-800">
+                    <button type="button" id="btnReset" class="px-4 py-2 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl text-sm font-semibold transition text-rose-400">
+                        Reset Default
+                    </button>
+                    <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-sm font-semibold transition text-white shadow-lg shadow-indigo-600/20">
+                        Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script Logika -->
+    <script>
+        // Nilai Default saat pertama kali dibuka jika Local Storage masih kosong
+        const DEFAULTS = {
+            erapor: 'erapor-sekolah.trycloudflare.com',
+            dapodik: 'dapodik-sekolah.trycloudflare.com',
+            autoRedirect: 'none'
+        };
+
+        // Fungsi memuat data dari Local Storage
+        function getSetting(key) {
+            const val = localStorage.getItem(`config_${key}`);
+            return val !== null ? val : DEFAULTS[key];
+        }
+
+        // Variabel penampung timer redirect
+        let redirectTimer = null;
+        let countdownVal = 5;
+
+        // Inisialisasi Tampilan Utama
+        function initApp() {
+            lucide.createIcons();
+
+            const eraporDomain = getSetting('erapor');
+            const dapodikDomain = getSetting('dapodik');
+            const autoRedirect = getSetting('autoRedirect');
+
+            // Format URL (pastikan memakai protokol https:// jika bukan localhost)
+            const eraporUrl = eraporDomain.startsWith('http') ? eraporDomain : `https://${eraporDomain}`;
+            const dapodikUrl = dapodikDomain.startsWith('http') ? dapodikDomain : `https://${dapodikDomain}`;
+
+            // Pasang ke tombol/link
+            document.getElementById('linkErapor').href = eraporUrl;
+            document.getElementById('linkDapodik').href = dapodikUrl;
+
+            // Logika Auto-Redirect
+            const banner = document.getElementById('redirectBanner');
+            const msg = document.getElementById('redirectMsg');
+            const countdownEl = document.getElementById('countdown');
+
+            // Reset timer jika ada inisialisasi ulang
+            if (redirectTimer) {
+                clearInterval(redirectTimer);
+                banner.classList.add('hidden');
+            }
+
+            if (autoRedirect !== 'none') {
+                const targetName = autoRedirect === 'erapor' ? 'E-Rapor' : 'Dapodik';
+                const targetUrl = autoRedirect === 'erapor' ? eraporUrl : dapodikUrl;
+
+                banner.classList.remove('hidden');
+                msg.innerHTML = `Membuka <span class="font-bold text-white">${targetName}</span> dalam <span id="countdown" class="text-yellow-400 font-bold">${countdownVal}</span> detik...`;
+                
+                countdownVal = 5;
+                redirectTimer = setInterval(() => {
+                    countdownVal--;
+                    const countEl = document.getElementById('countdown');
+                    if (countEl) countEl.innerText = countdownVal;
+
+                    if (countdownVal <= 0) {
+                        clearInterval(redirectTimer);
+                        window.location.href = targetUrl;
+                    }
+                }, 1000);
+            }
+        }
+
+        // Event Handling Modal
+        const btnConfig = document.getElementById('btnConfig');
+        const modal = document.getElementById('modalConfig');
+        const btnCloseModal = document.getElementById('btnCloseModal');
+        const configForm = document.getElementById('configForm');
+        const btnReset = document.getElementById('btnReset');
+        const btnCancelRedirect = document.getElementById('btnCancelRedirect');
+
+        btnConfig.addEventListener('click', () => {
+            // Isi input modal dengan nilai saat ini dari Local Storage
+            document.getElementById('inputErapor').value = getSetting('erapor');
+            document.getElementById('inputDapodik').value = getSetting('dapodik');
+            document.getElementById('selectAutoRedirect').value = getSetting('autoRedirect');
+            
+            modal.classList.remove('hidden');
+        });
+
+        const closeModal = () => {
+            modal.classList.add('hidden');
+            document.getElementById('saveSuccessMsg').classList.add('hidden');
+        };
+
+        btnCloseModal.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // Simpan Konfigurasi Baru
+        configForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            let eraporVal = document.getElementById('inputErapor').value.trim();
+            let dapodikVal = document.getElementById('inputDapodik').value.trim();
+            const redirectVal = document.getElementById('selectAutoRedirect').value;
+
+            // Bersihkan awalan https:// atau http:// jika diinput user agar seragam
+            eraporVal = eraporVal.replace(/^(https?:\/\/)/, '');
+            dapodikVal = dapodikVal.replace(/^(https?:\/\/)/, '');
+
+            localStorage.setItem('config_erapor', eraporVal || DEFAULTS.erapor);
+            localStorage.setItem('config_dapodik', dapodikVal || DEFAULTS.dapodik);
+            localStorage.setItem('config_autoRedirect', redirectVal);
+
+            // Munculkan notifikasi sukses kustom
+            const successBox = document.getElementById('saveSuccessMsg');
+            successBox.classList.remove('hidden');
+
+            initApp();
+
+            // Tutup modal otomatis setelah 1.5 detik
+            setTimeout(() => {
+                closeModal();
+            }, 1500);
+        });
+
+        // Reset Konfigurasi ke Default
+        btnReset.addEventListener('click', () => {
+            document.getElementById('inputErapor').value = DEFAULTS.erapor;
+            document.getElementById('inputDapodik').value = DEFAULTS.dapodik;
+            document.getElementById('selectAutoRedirect').value = DEFAULTS.autoRedirect;
+        });
+
+        // Batalkan Auto-Redirect saat hitung mundur sedang berjalan
+        btnCancelRedirect.addEventListener('click', () => {
+            if (redirectTimer) {
+                clearInterval(redirectTimer);
+                document.getElementById('redirectBanner').classList.add('hidden');
+            }
+        });
+
+        // Jalankan saat halaman siap
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
